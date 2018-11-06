@@ -50,6 +50,8 @@ func JoinHostPort(addr string, port int) string {
 	return addr
 }
 
+type AuthProvider func(hostname string) Authenticator
+
 type Authenticator interface {
 	Challenge(req []byte) (resp []byte, auth Authenticator, err error)
 	Success(data []byte) error
@@ -98,6 +100,7 @@ type ConnConfig struct {
 	ConnectTimeout time.Duration
 	Compressor     Compressor
 	Authenticator  Authenticator
+	AuthProvider   AuthProvider
 	Keepalive      time.Duration
 	tlsConfig      *tls.Config
 }
@@ -203,7 +206,7 @@ func (s *Session) dial(host *HostInfo, cfg *ConnConfig, errorHandler ConnErrorHa
 		addr:          conn.RemoteAddr().String(),
 		errorHandler:  errorHandler,
 		compressor:    cfg.Compressor,
-		auth:          cfg.Authenticator,
+		auth:          cfg.AuthProvider(addr),
 		quit:          make(chan struct{}),
 		session:       s,
 		streams:       streams.New(cfg.ProtoVersion),

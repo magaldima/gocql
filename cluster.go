@@ -53,6 +53,7 @@ type ClusterConfig struct {
 	Consistency        Consistency        // default consistency level (default: Quorum)
 	Compressor         Compressor         // compression algorithm (default: nil)
 	Authenticator      Authenticator      // authenticator (default: nil)
+	AuthProvider       AuthProvider       // authProvider (default: nil)
 	RetryPolicy        RetryPolicy        // Default retry policy to use for queries (default: 0)
 	ConvictionPolicy   ConvictionPolicy   // Decide whether to mark host as down based on the error and host info (default: SimpleConvictionPolicy)
 	ReconnectionPolicy ReconnectionPolicy // Default reconnection policy to use for reconnecting before trying to mark host as down (default: see below)
